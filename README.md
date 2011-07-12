@@ -32,5 +32,5 @@ way to support those too.)
 This all works by using 3rd party support in Node.js. 
 At the moment it does not actually precompile the source code into the 
 executable like it is done for the standard library with 
-[Google v8](http://code.google.com/p/v8/). Maybe that will be supported someday. Tge 
+[Google v8](http://code.google.com/p/v8/). Maybe that will be supported someday. The 
 code is simply included as it is inside the binary.

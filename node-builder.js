@@ -38,7 +38,7 @@ function main() {
 	var args = optimist.usage('Usage: $0 [-q] [--tmpdir=DIR] -o FILE [file(s)]')
 		.default('o', 'a.out')
 		.default('tmpdir', './tmp')
-		.default('distfile', 'http://nodejs.org/dist/node-v0.4.3.tar.gz')
+		.default('distfile', 'http://nodejs.org/dist/v0.8.15/node-v0.8.15.tar.gz')
 		.demand(['o'])
 		.argv;
 
@@ -112,9 +112,22 @@ function main() {
 		if(!quiet) console.log("Preparing source files into " + srcdir + "..." );
 		var file = files[0];
 		if(!file) next("no files!");
-		doexec("cp", ["-f", file, srcdir+"/lib/_third_party_main.js"], function(err) {
-			if(err) return error('Could not prepare _third_party_main.js: ' + err);
-			next();
+		fs.readFile(srcdir+'/node.gyp', 'utf8', function(err, data) {
+			if(err) return error('Could not read node.gyp: ' + err);
+
+			data = data.replace(
+				"'lib/_linklist.js',",
+				"'lib/_linklist.js', 'lib/_third_party_main.js',"
+			);
+
+			fs.writeFile(srcdir+'/node.gyp', data, 'utf8', function(err) {
+				if(err) return error('Could not write node.gyp: ' + err);
+
+				doexec("cp", ["-f", file, srcdir+"/lib/_third_party_main.js"], function(err) {
+					if(err) return error('Could not prepare _third_party_main.js: ' + err);
+					next();
+				});
+			});
 		});
 	}
 	

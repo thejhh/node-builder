@@ -35,13 +35,13 @@ function main() {
 	if(!child_process) return error(no_module_msg('child_process'));
 	
 	// Parse arguments
-	optimist.usage('Usage: $0 [-q] [--tmpdir=DIR] -o FILE [file(s)]');
-	optimist.default('o', 'a.out');
-	optimist.default('tmpdir', './tmp');
-	optimist.default('distfile', 'http://nodejs.org/dist/node-v0.4.3.tar.gz');
-	optimist.demand(['o']);
-	
-	var args = optimist.argv;
+	var args = optimist.usage('Usage: $0 [-q] [--tmpdir=DIR] -o FILE [file(s)]')
+		.default('o', 'a.out')
+		.default('tmpdir', './tmp')
+		.default('distfile', 'http://nodejs.org/dist/node-v0.4.3.tar.gz')
+		.demand(['o'])
+		.argv;
+
 	var source_files = args._;
 	if(source_files.length === 0) return error("You need to specify at least one script file.");
 	var quiet = args.q;
@@ -49,7 +49,7 @@ function main() {
 	/* Async preparation for directory */
 	function prep_dir (name, next) {
 		if(!quiet) console.log("Preparing directory " + name );
-		path.exists(name, function(exists) {
+		fs.exists(name, function(exists) {
 			if(exists) return next();
 			fs.mkdir(name, "0700", function(err) { next(err); });
 		});
@@ -58,7 +58,7 @@ function main() {
 	/* Async preparation for remote files */
 	function prep_distfiles (distfile, tofile, next) {
 		if(!quiet) console.log("Preparing distfile " + distfile + " to " + tofile);
-		path.exists(tofile, function(exists) {
+		fs.exists(tofile, function(exists) {
 			if(exists) return next();
 			if(!quiet) console.log("Downloading " + distfile + " to " + tofile);
 			var wget  = child_process.spawn('wget', ['-O', tofile, distfile]);
@@ -94,7 +94,7 @@ function main() {
 	/* Async unpack tar.gz */
 	function prep_unpack_tgz (name, dir, next) {
 		if(!quiet) console.log("Checking " + dir + "/configure..." );
-		path.exists(dir+"/configure", function(exists) {
+		fs.exists(dir+"/configure", function(exists) {
 			if(exists) return next();
 			if(!quiet) console.log("Unpacking " + name + " to " + dir);
 			var tar  = child_process.spawn('tar', ['--strip-components=1', '-C', dir, '-zxf', name]);

@@ -1,0 +1,31 @@
+{
+  "name": "node-builder",
+  "version": "0.0.1",
+  "description": "Simple script to build Node.js JavaScript code into binary executable",
+  "main": "node-builder.js",
+  "dependencies": {
+    "optimist": "~0.3.5"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jheusala/node-builder.git"
+  },
+  "keywords": {
+    "build",
+    "standalone",
+    "third_party_main"
+  },
+  "author": "Jaakko-Heikki Heusala",
+  "contributors": [
+    {
+      "name"  : "Luis Nabais",
+      "email" : "Luis.Nabais@cultofbits.com"
+    }
+  ],
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
